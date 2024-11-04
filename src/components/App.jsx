@@ -2,6 +2,8 @@ import { useState } from "react";
 import Categories from "./Categories";
 import Filters from "./Filters";
 import Tasks from "./Tasks";
+import { Container } from "@mui/material";
+import { Grid2, Stack, Typography } from "@mui/material";
 
 export default function App() {
   const [categories, setCategories] = useState([]);
@@ -11,26 +13,45 @@ export default function App() {
     setCategories((cur) => [...cur, category]);
   }
 
+  function handleDeleteCategory(index) {
+    setCategories((cur) => cur.filter((_, i) => i !== index));
+  }
+
   function handleSelectFilter(value) {
-    console.log(value);
     setFilter(value);
   }
 
   return (
-    <div className="app">
-      <header>
-        <h1>Taskly</h1>
-      </header>
-      <main>
-        <div className="sidebar">
-          <Filters onSelectFilter={handleSelectFilter} />
-          <Categories categories={categories} onAddCategory={handleAddCategory} />
-        </div>
-        <Tasks categories={categories} filter={filter} />
-      </main>
-      <footer>
-        <p>© {new Date().getFullYear()} Taskly. All rights reserved.</p>
-      </footer>
-    </div>
+    <Container maxWidth="md" style={{ paddingTop: "2rem", paddingBottom: "2rem" }}>
+      <Stack spacing={8}>
+        <header>
+          <Typography variant="h2" style={{ textAlign: "center" }}>
+            Taskly
+          </Typography>
+        </header>
+        <main style={{ flexGrow: 1 }}>
+          <Grid2 container spacing={2} style={{ flexGrow: 1 }}>
+            <Grid2 size={4}>
+              <Stack spacing={2}>
+                <Filters onSelectFilter={handleSelectFilter} />
+                <Categories
+                  categories={categories}
+                  onAddCategory={handleAddCategory}
+                  onDeleteCategory={handleDeleteCategory}
+                />
+              </Stack>
+            </Grid2>
+            <Grid2 size={8}>
+              <Tasks categories={categories} filter={filter} />
+            </Grid2>
+          </Grid2>
+        </main>
+        <footer>
+          <Typography variant="body1" style={{ textAlign: "center" }}>
+            © {new Date().getFullYear()} Taskly. All rights reserved.
+          </Typography>
+        </footer>
+      </Stack>
+    </Container>
   );
 }

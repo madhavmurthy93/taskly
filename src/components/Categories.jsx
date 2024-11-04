@@ -1,8 +1,21 @@
 import { useState } from "react";
+import {
+  Box,
+  Button,
+  IconButton,
+  Stack,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  TextField,
+} from "@mui/material";
+import TagIcon from "@mui/icons-material/Tag";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function Categories({ categories, onAddCategory }) {
+export default function Categories({ categories, onAddCategory, onDeleteCategory }) {
   const [category, setCategory] = useState("");
-  const [showForm, setShowForm] = useState(false);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -10,23 +23,41 @@ export default function Categories({ categories, onAddCategory }) {
     setCategory("");
   }
   return (
-    <div className="categories">
-      <h2>Categories</h2>
-      <ul>
+    <Stack spacing={1}>
+      <Typography variant="h4">Categories</Typography>
+      <List>
         {categories.map((category, index) => (
-          <li key={index}>{category}</li>
+          <ListItem
+            key={index}
+            secondaryAction={
+              <IconButton edge="end" aria-label="delete" onClick={() => onDeleteCategory(index)}>
+                <DeleteIcon />
+              </IconButton>
+            }
+          >
+            <ListItemIcon>
+              <TagIcon />
+            </ListItemIcon>
+            <ListItemText primary={category} />
+          </ListItem>
         ))}
-      </ul>
-      {showForm && (
-        <form onSubmit={handleSubmit}>
-          <label>Category</label>
-          <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} />
-          <button>Add</button>
-        </form>
-      )}
-      <button onClick={() => setShowForm((cur) => !cur)}>
-        {showForm ? "Close" : "Add category"}
-      </button>
-    </div>
+      </List>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{ display: "flex", flexDirection: "row", gap: 2, justifyContent: "flex-start" }}
+      >
+        <TextField
+          label="Category"
+          variant="outlined"
+          size="small"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        />
+        <Button type="submit" variant="outlined">
+          Add
+        </Button>
+      </Box>
+    </Stack>
   );
 }
